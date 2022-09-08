@@ -39,4 +39,6 @@ imu.onUpdate = (ui) => {
 }
 ```
 
+![Example controls.](https://github.com/philbgarner/bfont-imui/blob/master/examples/example.png)
+
 See the examples folder for details.
