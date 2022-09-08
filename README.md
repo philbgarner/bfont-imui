@@ -34,7 +34,6 @@ imu.onUpdate = (ui) => {
         ui.Element({ id: 'edtTest', type: 'TextBoxFlat', defaultText: 'Test', rect: { x: 5, y: 32, w: 115, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
         ui.Element({ id: 'edtTest2', type: 'TextBoxFlat', defaultText: 'Test 2', rect: { x: 5, y: 48, w: 115, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
         ui.Element({ id: 'btnTest', type: 'ButtonFlat', text: 'Test', rect: { x: 125, y: 32, w: 64, h: 16 }, color: '#000000ff', highlight: '#f1f1f1ff', bgcolor: '#ccccccff' })
-        ui.active = 'edtTest'
     }
 }
 ```
