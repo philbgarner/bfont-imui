@@ -37,7 +37,7 @@ class Button3d extends Element {
             mx = parseInt(imui.font.cwidth * 0.3)
             my = parseInt(imui.font.cheight * 0.1)
         }
-        imui.DrawText(rect.x + imui.font.cwidth + mx, rect.y + imui.font.cheight + my, txt, this.color)
+        imui.DrawText(borderRect.x + mx + borderRect.w / 2 - (txt.length * imui.font.cwidth) / 2, borderRect.y + my + borderRect.h / 2 - imui.font.cheight / 2, txt, this.color)
     }
 }
 

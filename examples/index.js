@@ -12,8 +12,6 @@ function drawFrame(timestamp) {
     window.requestAnimationFrame(drawFrame)
 }
 
-var toggleClick = false
-
 function Start() {
     canvas = document.getElementById('maincanvas')
     ctx = canvas.getContext('2d')
@@ -29,19 +27,11 @@ function Start() {
     imu = new imui.ImUI(canvas)
 
     imu.onUpdate = (ui) => {
-        ui.Element({ id: 'bg', text: 'bg', rect: { x: 0, y: 0, w: 720, h: 400 }, bgcolor: '#5a5a5aff', color: '#000000ff', highlight: '#f1f1f1ff'})
-        if (ui.Element({ id: 'lblhover', text: 'Immediate Mode Test (Hover Me)', x: 35, y: 100, bgcolor: '#0000ddff', color: '#000000ff', highlight: '#f1f1f1ff'}).Hover()) {
-             ui.Element({ id: 'lblhovered', text: 'Hovered!', x: 65, y: 116 })
-        }
-        if (ui.Element({ id: 'lblclick', text: 'Immediate Mode Test (Click Me)', x: 35, y: 132, bgcolor: '#0000ddff', color: '#000000ff', highlight: '#f1f1f1ff'}).Clicked()) {
-            toggleClick = !toggleClick
-        }
-        if (toggleClick) {
-            ui.Element({ id: 'edtTest', type: 'TextBoxFlat', defaultText: 'Test', rect: { x: 5, y: 32, w: 115, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
-            ui.Element({ id: 'edtTest2', type: 'TextBoxFlat', defaultText: 'Test 2', rect: { x: 5, y: 48, w: 115, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
-            ui.Element({ id: 'btnTest', type: 'ButtonFlat', text: 'Test', rect: { x: 125, y: 32, w: 64, h: 16 }, color: '#000000ff', highlight: '#f1f1f1ff', bgcolor: '#ccccccff' })
-            ui.active = 'edtTest'
-        }
+        ui.Element({ id: 'bg', type: 'FrameFlat', text: '', rect: { x: 0, y: 0, w: 720, h: 400 }, bgcolor: '#5a5a5aff', color: '#000000ff', highlight: '#f1f1f1ff'})
+        ui.Element({ id: 'edtTest', type: 'TextBoxFlat', defaultText: 'Textbox', rect: { x: 25, y: 32, w: 215, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
+        ui.Element({ id: 'edtTest2', type: 'TextBoxFlat', defaultText: 'Textbox', rect: { x: 25, y: 48, w: 215, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
+        ui.Element({ id: 'btnTest', type: 'ButtonFlat', text: 'Button', rect: { x: 245, y: 32, w: 96, h: 16 }, color: '#000000ff', highlight: '#f1f1f1ff', bgcolor: '#ccccccff' })
+        ui.Element({ id: 'btnTest2', type: 'Button3d', text: 'Big Button', rect: { x: 25, y: 68, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff' })
     }
 
     window.requestAnimationFrame(drawFrame)

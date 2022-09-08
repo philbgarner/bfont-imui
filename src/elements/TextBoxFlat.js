@@ -6,9 +6,8 @@ class TextBoxFlat extends Element {
         this.rect.h = parseInt(this.rect.h / 16) * 16
         this.rect.w = parseInt(this.rect.w / 9) * 9
 
-        this.text = this.defaultText ? this.defaultText : ''
-
-        this.editable = this.editable ? this.editable : true
+        this.text = params.defaultText ? params.defaultText : ''
+        this.editable = params.editable ? params.editable : true
 
         if (params.drawBuffer) {
             this.InitializeBuffer({x: 9, y: 32})
