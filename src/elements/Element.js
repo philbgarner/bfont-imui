@@ -83,6 +83,11 @@ class Element {
         }
     }
 
+    InsideRect(x, y, rect) {
+        let r = rect ? rect : this.rect
+        return x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h
+    }
+
     Clicked() { return this.state.clicked }
     Hover() { return this.state.mouseOver }
     MouseDown() { return this.state.mouseDown }
