@@ -6,6 +6,9 @@ class ButtonFlat extends Element {
         this.rect.h = parseInt(this.rect.h / 16) * 16
         this.rect.w = parseInt(this.rect.w / 9) * 9
 
+        this.leftChar = params.leftChar ? params.leftChar : '<'
+        this.rightChar = params.rightChar ? params.rightChar : '>'
+
         if (params.drawBuffer) {
             this.InitializeBuffer({x: 9, y: 32})
         }
@@ -35,10 +38,8 @@ class ButtonFlat extends Element {
 
         imui.DrawText(rect.x + rect.w / 2 - (txt.length * imui.font.cwidth) / 2, rect.y + rect.h / 2 - imui.font.cheight / 2, txt, textcolor)
 
-        let leftChar = '<', rightChar = '>'
-
-        imui.DrawText(rect.x, rect.y + rect.h / 2 - imui.font.cheight / 2, leftChar, textcolor)
-        imui.DrawText(rect.x + rect.w - imui.font.cwidth, rect.y + rect.h / 2 - imui.font.cheight / 2, rightChar, textcolor)
+        imui.DrawText(rect.x, rect.y + rect.h / 2 - imui.font.cheight / 2, this.leftChar, textcolor)
+        imui.DrawText(rect.x + rect.w - imui.font.cwidth, rect.y + rect.h / 2 - imui.font.cheight / 2, this.rightChar, textcolor)
     }
 }
 
