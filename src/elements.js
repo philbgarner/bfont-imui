@@ -4,6 +4,7 @@ import Frame3d from './elements/Frame3d.js'
 import Button3d from './elements/Button3d.js'
 import ButtonFlat from './elements/ButtonFlat.js'
 import TextBoxFlat from './elements/TextBoxFlat.js'
+import List from './elements/List.js'
 
 function GetElementType(type) {
     switch(type.toLowerCase()) {
@@ -19,7 +20,9 @@ function GetElementType(type) {
             return ButtonFlat
         case 'textboxflat':
             return TextBoxFlat
+        case 'list':
+            return List
     }
 }
 
-export { Element, FrameFlat, Frame3d, Button3d, ButtonFlat, TextBoxFlat, GetElementType }
+export { Element, FrameFlat, Frame3d, Button3d, ButtonFlat, TextBoxFlat, List, GetElementType }
