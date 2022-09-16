@@ -9,8 +9,9 @@ class List extends Element {
         this.bgScrollbar = params.bgScrollbar ? params.bgScrollbar : '#645355ff'
         this.list = params.list ? params.list : []
         this.currentItem = null
-        this.scrollOffset = 30
+        this.scrollOffset = 0
         this.horizontal = params.horizontal ? params.horizontal : false
+        this.scrollbar = params.scrollbar ? params.scrollbar : true
 
         this.draggingCaret = false
     }
@@ -30,8 +31,7 @@ class List extends Element {
         let dx = rect.x + imui.font.cwidth
         let dy = rect.y
         for (let l = this.scrollOffset; l < this.list.length; l++) {
-            
-            let txt = this.list[l] > rect.w - imui.font.cwidth * 2 ? this.list.substr(0, parseInt(rect.w - imui.font.cwidth)) : this.list[l]
+            let txt = this.list[l]
 
             let txtRect = { x: dx, y: dy, w: txt.length * imui.font.cwidth, h: imui.font.cheight }
             let isHoverItem = this.state.mouseOver && !this.state.mouseDown &&
@@ -57,7 +57,7 @@ class List extends Element {
             }
         }
         
-        if (this.rect.h < imui.font.cheight * this.list.length) {
+        if (this.rect.h < imui.font.cheight * this.list.length && !this.horizontal) {
             let upRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y, w: imui.font.cwidth, h: imui.font.cheight}
             let downRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y + rect.h - imui.font.cheight, w: imui.font.cwidth, h: imui.font.cheight}
             let scrollBarRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y + imui.font.cheight, w: imui.font.cwidth, h: rect.h - (imui.font.cheight * 2) }

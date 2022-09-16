@@ -36,8 +36,6 @@ class Element {
                 change: false
             }
 
-        this.elements = []
-
         this.buffer = null
         if (params.drawBuffer) {
             this.InitializeBuffer()
@@ -100,28 +98,39 @@ class Element {
         }
     }
 
-    Update(imui) {
+    Update(imui, eventHandled) {
+        let evt = false
         if (this.autosize) {
             this.rect.w = this.text.length * imui.font.cwidth
             this.rect.h = imui.font.cheight
         }
+        if (this.state.clicked && this.id !== imui.active) {
+            imui.active = this.id
+            this.setState({ changed: true })
+            evt = true
+        }
         if (imui.mousePos.x >= this.rect.x && imui.mousePos.y >= this.rect.y && imui.mousePos.x <= this.rect.x + this.rect.w && imui.mousePos.y <= this.rect.y + this.rect.h) {
             if (this.state.mouseOver && this.state.clicked) {
                 this.setState({ mouseOver: true, clicked: false})
-            } else {
+                evt = true
+            } else if (!eventHandled) {
                 this.setState({ mouseOver: true })
+                evt = true
             }
             if (imui.mouseButton > 0 && !this.state.mouseDown) {
                 this.setState({ mouseDown: true })
-            }
-            if (imui.mouseButton === 0 && this.prevState.mouseDown) {
+                evt = true
+            } else if (imui.mouseButton === 0 && this.prevState.mouseDown) {
                 this.setState({ mouseUp: true, mouseDown: false })
-            } else if (imui.mouseButton === 0 && this.state.mouseUp) {
-                this.setState({ mouseUp: false, clicked: true })
-                imui.active = this.id
+                evt = true
             }
         } else {
             this.setState({ mouseOver: false, mouseDown: false, mouseUp: false, clicked: false })
+        }
+        if (imui.mouseButton === 0 && this.state.mouseUp) {
+            this.setState({ mouseUp: false, clicked: true })
+            imui.active = this.id
+            evt = true
         }
         if (this.text !== this.prevText) {
             this.setState({ change: true })
@@ -129,14 +138,8 @@ class Element {
         } else {
             this.setState({ change: false })
         }        
-        if (this.state.clicked && this.id !== imui.active) {
-            imui.active = this.id
-            this.setState({ changed: true })
-        }
-
-        for (let e in this.elements) {
-            this.elements[e].Update(imui)
-        }
+        
+        return evt
     }
 
     _Draw(imui, rect) {

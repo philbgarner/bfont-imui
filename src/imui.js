@@ -41,7 +41,7 @@ class ImUI {
 
         window.addEventListener('keyup', (e) => {
             if (this.active) {
-                let element = this.elements.filter(f => f.id === this.active)
+                let element = this.elements.filter(f => f !== undefined).filter(f => f.id === this.active)
                 if (element.length > 0 && element[0].editable) {
                     if (e.key.length === 1) {
                         element[0].prevText = element[0].text
@@ -74,19 +74,23 @@ class ImUI {
         
         // Update async thread.
         setInterval(() => {
-            let preUpdateIds = this.elements.map(el => el.id)
+            try {
+                let preUpdateIds = this.elements.map(el => el.id)
     
-            this.postUpdateIds = []
-            this.onUpdate(this)
+                this.postUpdateIds = []
 
-            for (let id in preUpdateIds) {
-                if (this.postUpdateIds.filter(f => f === preUpdateIds[id]).length === 0) {
-                    this.elements[this.elements.findIndex(f => f.id === preUpdateIds[id])] = undefined
-                }
-            }
-            this.elements = this.elements.filter(f => f !== undefined)
+                this.elements = this.elements.filter(f => f !== undefined)
+                this.onUpdate(this)
     
-            this.Update()
+                for (let id in preUpdateIds) {
+                    if (this.postUpdateIds.filter(f => f === preUpdateIds[id]).length === 0) {
+                        this.elements[this.elements.findIndex(f => f !== undefined && f.id === preUpdateIds[id])] = undefined
+                    }
+                }
+                this.elements = this.elements.filter(f => f !== undefined)
+        
+                this.Update()
+            } catch (e) { console.error(e) }
         }, 16) // 16 is around 60fps
     }
 
@@ -106,7 +110,7 @@ class ImUI {
         if (elem.length === 0) {
             let ElementClass = GetElementType(params.type)
             let el = new ElementClass(params)
-            el.Update(this)
+            el.Update(this, false)
             this.elements.push(el)
             this.postUpdateIds.push(params.id)
             return el
@@ -144,14 +148,19 @@ class ImUI {
     }
 
     Update() {
-        for (let e in this.elements) {
-            this.elements[e].Update(this)
+        let eventHandled = false
+        for (let e = this.elements.length - 1; e >= 0; e--) {
+            if (!eventHandled && this.elements[e]) {
+                eventHandled = this.elements[e].Update(this, eventHandled)
+            }
         }
     }
 
     Draw() {
         for (let e in this.elements) {
-            this.elements[e].Draw(this)
+            if (this.elements[e]) {
+                this.elements[e].Draw(this)
+            }
         }
     }
 }
