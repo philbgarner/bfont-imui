@@ -6,6 +6,7 @@ import ButtonFlat from './elements/ButtonFlat.js'
 import TextBoxFlat from './elements/TextBoxFlat.js'
 import List from './elements/List.js'
 import Image from './elements/Image.js'
+import FrameImage from './elements/FrameImage.js'
 
 function GetElementType(type) {
     switch(type.toLowerCase()) {
@@ -25,7 +26,9 @@ function GetElementType(type) {
             return List
         case 'image':
             return Image
+        case 'frameimage':
+            return FrameImage
     }
 }
 
-export { Element, FrameFlat, Frame3d, Button3d, ButtonFlat, TextBoxFlat, List, Image, GetElementType }
+export { Element, FrameFlat, Frame3d, Button3d, ButtonFlat, TextBoxFlat, List, Image, FrameImage, GetElementType }

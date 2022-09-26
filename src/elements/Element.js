@@ -16,6 +16,8 @@ class Element {
         this.bgcolor = params.bgcolor ? params.bgcolor : undefined
         this.text = params.text ? params.text : ''
         this.prevText = this.text
+        
+        this.font = params.font ? params.font : null
 
         this.rect.x = params.x ? params.x : this.rect.x
         this.rect.y = params.y ? params.y : this.rect.y
@@ -152,7 +154,11 @@ class Element {
             textcolor = this.highlight ? this.highlight : textcolor
         }
 
-        imui.DrawText(rect.x, rect.y, this.text, textcolor)
+        if (this.font) {
+            imui.DrawTextFont(this.font, rect.x, rect.y, this.text, textcolor)
+        } else {
+            imui.DrawText(rect.x, rect.y, this.text, textcolor)
+        }
     }
 
     Draw(imui) {

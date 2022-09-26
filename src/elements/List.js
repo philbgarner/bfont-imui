@@ -34,7 +34,7 @@ class List extends Element {
             let txt = this.list[l]
 
             let txtRect = { x: dx, y: dy, w: txt.length * imui.font.cwidth, h: imui.font.cheight }
-            let isHoverItem = this.state.mouseOver && !this.state.mouseDown &&
+            let isHoverItem = this.state.mouseOver &&
                 imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&
                 imui.mousePos.x < txtRect.x + txtRect.w && imui.mousePos.y < txtRect.y + txtRect.h
             let isMouseDownItem = this.state.mouseDown && imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&

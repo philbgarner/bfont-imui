@@ -123,8 +123,12 @@ class ImUI {
         }
     }
     
+    DrawTextFont(font, x, y, text, color, effects) {
+        bfontjs.DrawText(this.ctx, parseInt(x), parseInt(y), text, color, font, effects)
+    }
+
     DrawText(x, y, text, color, effects) {
-        bfontjs.DrawText(this.ctx, parseInt(x), parseInt(y), text, color, this.font, effects)
+        this.DrawTextFont(this.font, x, y, text, color, effects)
     }
     
     DrawRect(rect, color) {
