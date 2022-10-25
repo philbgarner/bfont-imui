@@ -23,6 +23,10 @@ class FrameImage extends Element {
     }
 
     _Draw(imui, rect) {
+        if (this.bgcolor) {
+            imui.DrawRect(rect, this.bgcolor)
+        }
+
         if (this.image) {
             // Top Left Corner
             imui.ctx.drawImage(this.image, 0, 0, this.innerRect.x, this.innerRect.y, this.rect.x, this.rect.y, this.innerRect.x, this.innerRect.y)
@@ -64,7 +68,7 @@ class FrameImage extends Element {
                 if (dy + dh > this.rect.y + this.rect.h - this.innerRect.y) {
                     dh = this.rect.y + this.rect.h - this.innerRect.y - dy
                 }
-                imui.ctx.drawImage(this.image, 0, this.innerRect.y, this.innerRect.x, dh, this.rect.x + this.rect.w - this.innerRect.x, dy, this.innerRect.x, dh)
+                imui.ctx.drawImage(this.image, this.image.width - this.innerRect.x, this.innerRect.y, this.innerRect.x, dh, this.rect.x + this.rect.w - this.innerRect.x, dy, this.innerRect.x, dh)
             }
 
             // Centre
@@ -74,7 +78,7 @@ class FrameImage extends Element {
             let sh = this.image.height - this.innerRect.y * 2
             let dx = this.innerRect.x + this.rect.x
             let dy = this.innerRect.y + this.rect.y
-            while (dy < this.rect.h - this.innerRect.y) {
+            while (dy < this.rect.y + this.rect.h - this.innerRect.y) {
                 let w = sw
                 let h = sh
                 if (dx + w > this.rect.x + this.rect.w - this.innerRect.x) {

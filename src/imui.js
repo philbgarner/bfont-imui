@@ -21,77 +21,102 @@ class ImUI {
         }
 
         this.canvas.addEventListener('mousemove', (e) => {
-            this.mousePos.x = parseInt(e.clientX * (this.canvas.width / parseInt(this.canvas.style.width)))
-            this.mousePos.y = parseInt(e.clientY * (this.canvas.height / parseInt(this.canvas.style.height)))
+            if (this.executing) {
+                this.mousePos.x = parseInt((e.clientX - canvas.offsetLeft) * (this.canvas.width / parseInt(this.canvas.style.width)))
+                this.mousePos.y = parseInt((e.clientY - canvas.offsetTop) * (this.canvas.height / parseInt(this.canvas.style.height)))
+            }
         })
 
         this.canvas.addEventListener('mousedown', (e) => {
-            this.mouseButton = e.buttons
+            if (this.executing) {
+                this.mouseButton = e.buttons
+            }
         })
         
         this.canvas.addEventListener('mouseup', (e) => {
-            this.mouseButton = 0
+            if (this.executing) {
+                this.mouseButton = 0
+            }
         })
 
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
+            if (this.executing) {
+                if (e.key === 'Tab') {
                 e.preventDefault()                
+                }
             }
         })
 
         window.addEventListener('keyup', (e) => {
-            if (this.active) {
-                let element = this.elements.filter(f => f !== undefined).filter(f => f.id === this.active)
-                if (element.length > 0 && element[0].editable) {
-                    if (e.key.length === 1) {
-                        element[0].prevText = element[0].text
-                        element[0].text += e.key
-                    } else if (e.key === 'Backspace') {
-                        element[0].prevText = element[0].text
-                        element[0].text = element[0].text.substring(0, element[0].text.length - 1)
-                    } else if (e.key === 'Enter') {
-                        this.active = null
-                    }
-                }
-                if (element.length > 0) {
-                    if (e.key === 'Tab') {
-                        let index = this.elements.findIndex(f => f.id === this.active)
-                        if (index + 1 < this.elements.length) {
-                            index++
-                        } else {
-                            index = 0
+            if (this.executing) {
+                if (this.active) {
+                    let element = this.elements.filter(f => f !== undefined).filter(f => f.id === this.active)
+                    if (element.length > 0 && element[0].editable) {
+                        if (e.key.length === 1) {
+                            element[0].prevText = element[0].text
+                            element[0].text += e.key
+                        } else if (e.key === 'Backspace') {
+                            element[0].prevText = element[0].text
+                            element[0].text = element[0].text.substring(0, element[0].text.length - 1)
+                        } else if (e.key === 'Enter') {
+                            this.active = null
                         }
-                        this.active = this.elements[index].id
                     }
-                }
-            } else if (this.elements.length > 0) {
-                if (e.key === 'Tab') {
-                    this.active = this.elements[0].id
+                    if (element.length > 0) {
+                        if (e.key === 'Tab') {
+                            let index = this.elements.findIndex(f => f.id === this.active)
+                            if (index + 1 < this.elements.length) {
+                                index++
+                            } else {
+                                index = 0
+                            }
+                            this.active = this.elements[index].id
+                        }
+                    }
+                } else if (this.elements.length > 0) {
+                    if (e.key === 'Tab') {
+                        this.active = this.elements[0].id
+                    }
                 }
             }
             return false
         })
         
-        // Update async thread.
-        setInterval(() => {
-            try {
-                let preUpdateIds = this.elements.map(el => el.id)
-    
-                this.postUpdateIds = []
+        this.Enable()
+    }
 
-                this.elements = this.elements.filter(f => f !== undefined)
-                this.onUpdate(this)
-    
-                for (let id in preUpdateIds) {
-                    if (this.postUpdateIds.filter(f => f === preUpdateIds[id]).length === 0) {
-                        this.elements[this.elements.findIndex(f => f !== undefined && f.id === preUpdateIds[id])] = undefined
-                    }
+    Disable() {
+        this.executing = false
+    }
+
+    Enable() {
+        this.executing = true
+        this.UpdateThread()
+    }
+
+    // Update async thread.
+    UpdateThread() {
+        try {
+            let preUpdateIds = this.elements.map(el => el.id)
+
+            this.postUpdateIds = []
+
+            this.elements = this.elements.filter(f => f !== undefined)
+            this.onUpdate(this)
+
+            for (let id in preUpdateIds) {
+                if (this.postUpdateIds.filter(f => f === preUpdateIds[id]).length === 0) {
+                    this.elements[this.elements.findIndex(f => f !== undefined && f.id === preUpdateIds[id])] = undefined
                 }
-                this.elements = this.elements.filter(f => f !== undefined)
-        
-                this.Update()
-            } catch (e) { console.error(e) }
-        }, 16) // 16 is around 60fps
+            }
+            this.elements = this.elements.filter(f => f !== undefined)
+    
+            this.Update()
+            
+            if (this.executing) {
+                setTimeout(() => this.UpdateThread(), 16)
+            }
+        } catch (e) { console.error(e) }
     }
 
     ChangeContext(canvas) {
