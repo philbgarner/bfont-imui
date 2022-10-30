@@ -35,9 +35,12 @@ function Start() {
         }
         ui.Element({ id: 'btnTest2', type: 'Button3d', text: 'Big Button', rect: { x: 25, y: 68, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff' })
 
-        ui.Element({ id: 'list', type: 'List', list: ['Test 1', 'Test 2'], rect: { x: 25, y: 168, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff' })
-        ui.Element({ id: 'list1', type: 'List', list: ['Test111', 'Test1111'], rect: { x: 41, y: 178, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff' })
+        // ui.Element({ id: 'list', type: 'List', list: ['Test 1', 'Test 2'], rect: { x: 25, y: 168, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff'})
+        // ui.Element({ id: 'list1', type: 'List', list: ['Test111', 'Test1111', 'T1', 'T2', 'T3'], rect: { x: 41, y: 178, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff', scrollUp: '▲', scrollDown: '▼', scrollCaret: '■' })
 
+        // ui.Element({ id: 'wrapTextFrame', type: 'FrameFlat', text: '', rect: { x: 25, y: 230, w: 120, h: 64 }, bgcolor: '#5a5a5aff', color: '#000000ff', highlight: '#f1f1f1ff'})
+        ui.Element({ id: 'wrapText', text: 'Test wrapping text 123456789', rect: { x: 25, y: 230, w: 120, h: 64 }, bgcolor: '#ccccccff', color: '#000000ff', highlight: '#f1f1f1ff'
+            , wrap: 'wrap'})
     }
 
     window.requestAnimationFrame(drawFrame)

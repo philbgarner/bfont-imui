@@ -13,6 +13,12 @@ class List extends Element {
         this.horizontal = params.horizontal ? params.horizontal : false
         this.scrollbar = params.scrollbar ? params.scrollbar : true
 
+        this.scrollbarCharacters = {
+            scrollUp: params.scrollUp ? params.scrollUp : 252,
+            scrollDown: params.scrollDown ? params.scrollDown : 253,
+            scrollCaret: params.scrollCaret ? params.scrollCaret : 254
+        }
+
         this.draggingCaret = false
     }
 
@@ -62,9 +68,9 @@ class List extends Element {
             let downRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y + rect.h - imui.font.cheight, w: imui.font.cwidth, h: imui.font.cheight}
             let scrollBarRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y + imui.font.cheight, w: imui.font.cwidth, h: rect.h - (imui.font.cheight * 2) }
             imui.DrawRect(scrollBarRect, this.bgScrollbar)
-            imui.DrawText(upRect.x, upRect.y, 24, this.InsideRect(imui.mousePos.x, imui.mousePos.y, upRect) && this.state.mouseDown ? this.highlight : this.color, 
+            imui.DrawText(upRect.x, upRect.y, this.scrollbarCharacters.scrollUp, this.InsideRect(imui.mousePos.x, imui.mousePos.y, upRect) && this.state.mouseDown ? this.highlight : this.color, 
                 this.InsideRect(imui.mousePos.x, imui.mousePos.y, upRect) && this.state.mouseDown ? { background: { colour: this.color } } : { background: { colour: this.bgScrollbar } })
-            imui.DrawText(downRect.x, downRect.y, 25, this.InsideRect(imui.mousePos.x, imui.mousePos.y, downRect) && this.state.mouseDown ? this.highlight : this.color, 
+            imui.DrawText(downRect.x, downRect.y, this.scrollbarCharacters.scrollDown, this.InsideRect(imui.mousePos.x, imui.mousePos.y, downRect) && this.state.mouseDown ? this.highlight : this.color, 
                 this.InsideRect(imui.mousePos.x, imui.mousePos.y, downRect) && this.state.mouseDown ? { background: { colour: this.color } } : { background: { colour: this.bgScrollbar } })
 
             let caretPos = (this.scrollOffset / (this.list.length - 1)) * scrollBarRect.h
@@ -104,7 +110,7 @@ class List extends Element {
                 this.draggingCaret = false
             }
             let caretHovered = this.InsideRect(imui.mousePos.x, imui.mousePos.y, { x: scrollBarRect.x, y: scrollBarRect.y + caretPos, w: scrollBarRect.w, h: imui.font.cwidth})
-            imui.DrawText(scrollBarRect.x, scrollBarRect.y + caretPos, 254, caretHovered ? this.highlight : caretColr, { background: { colour: caretBg } })
+            imui.DrawText(scrollBarRect.x, scrollBarRect.y + caretPos, this.scrollbarCharacters.scrollCaret, caretHovered ? this.highlight : caretColr, { background: { colour: caretBg } })
         }
     }
 }

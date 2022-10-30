@@ -17,6 +17,8 @@ class Element {
         this.text = params.text ? params.text : ''
         this.prevText = this.text
         
+        this.wrap = params.wrap ? params.wrap : ''
+
         this.font = params.font ? params.font : null
 
         this.rect.x = params.x ? params.x : this.rect.x
@@ -45,7 +47,6 @@ class Element {
     }
 
     InitializeBuffer(margin) {
-        console.log('initializebuffer', margin)
         let mx = 0, my = 0
         if (margin) {
             mx = margin.x
@@ -144,21 +145,76 @@ class Element {
         return evt
     }
 
+    GetMaxTextWidth(font, txt) {
+        let lines = []
+        try {
+            if (typeof txt === 'number') {
+                txt = font.codepage.filter(f => f.codenumber === txt)[0].symbol
+            }
+            lines = txt.split('\n')
+        } catch (e) {
+            console.log('Error splitting txt parameters: ', e, ' typeof txt =', typeof txt)
+        }
+        let w = 0
+        for (let l in lines) {
+            let line = lines[l]
+            if (line.length * font.cwidth > w) {
+                w = line.length * font.cwidth
+            }
+        }
+        return w
+    }
+
+    GetWrappedText(font, txt, rect) {
+        let lines = txt.split('\n')
+        let wrapPos = parseInt(rect.w / font.cwidth)
+        let c = 0
+        while (this.GetMaxTextWidth(font, lines.join('\n')) >= rect.w && c <= 100) {
+            let newLines = []
+            for (let l in lines) {
+                let lineWidth = lines[l].length * font.cwidth
+                if (lineWidth > rect.w) {
+                    newLines.push(lines[l].slice(0, wrapPos).trim(),
+                                    lines[l].slice(wrapPos, lines[l].length).trim())
+                } else {
+                    newLines.push(lines[l])
+                }
+            }
+            lines = newLines
+            c++
+        }
+        return lines.join('\n')
+    }
+
+    DrawText(imui, font, rect) {
+        let textcolor = this.color
+        if (this.id === imui.active) {
+            textcolor = this.highlight ? this.highlight : textcolor
+        }
+        let txt = this.text
+
+        font = font ? font : bfontjs.Fonts().default
+        if (this.GetMaxTextWidth(font, txt) > this.rect.w) {
+            if (this.wrap === 'clip') {
+                let rectCharWidth = Math.floor(this.rect.w / font.cwidth)
+                txt = txt.substring(0, rectCharWidth)
+            } else if (this.wrap === 'ellipses') {
+                let rectCharWidth = Math.floor(this.rect.w / font.cwidth)
+                txt = txt.substring(0, rectCharWidth - 3)
+                txt += '...'
+            } else if (this.wrap === 'wrap') {
+                txt = this.GetWrappedText(font, txt, this.rect)
+            }
+        }
+        imui.DrawTextFont(font, rect.x, rect.y, txt, textcolor)
+    }
+
     _Draw(imui, rect) {
         if (this.bgcolor) {
             imui.DrawRect(rect, this.bgcolor)
         }
 
-        let textcolor = this.color
-        if (this.id === imui.active) {
-            textcolor = this.highlight ? this.highlight : textcolor
-        }
-
-        if (this.font) {
-            imui.DrawTextFont(this.font, rect.x, rect.y, this.text, textcolor)
-        } else {
-            imui.DrawText(rect.x, rect.y, this.text, textcolor)
-        }
+        this.DrawText(imui, this.font, rect)
     }
 
     Draw(imui) {

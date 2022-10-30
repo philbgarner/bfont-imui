@@ -97,23 +97,23 @@ class ImUI {
     // Update async thread.
     UpdateThread() {
         try {
-            let preUpdateIds = this.elements.map(el => el.id)
-
-            this.postUpdateIds = []
-
-            this.elements = this.elements.filter(f => f !== undefined)
-            this.onUpdate(this)
-
-            for (let id in preUpdateIds) {
-                if (this.postUpdateIds.filter(f => f === preUpdateIds[id]).length === 0) {
-                    this.elements[this.elements.findIndex(f => f !== undefined && f.id === preUpdateIds[id])] = undefined
-                }
-            }
-            this.elements = this.elements.filter(f => f !== undefined)
-    
-            this.Update()
-            
             if (this.executing) {
+                let preUpdateIds = this.elements.map(el => el.id)
+
+                this.postUpdateIds = []
+
+                this.elements = this.elements.filter(f => f !== undefined)
+                this.onUpdate(this)
+
+                for (let id in preUpdateIds) {
+                    if (this.postUpdateIds.filter(f => f === preUpdateIds[id]).length === 0) {
+                        this.elements[this.elements.findIndex(f => f !== undefined && f.id === preUpdateIds[id])] = undefined
+                    }
+                }
+                this.elements = this.elements.filter(f => f !== undefined)
+        
+                this.Update()
+            
                 setTimeout(() => this.UpdateThread(), 16)
             }
         } catch (e) { console.error(e) }
@@ -149,11 +149,14 @@ class ImUI {
     }
     
     DrawTextFont(font, x, y, text, color, effects) {
-        bfontjs.DrawText(this.ctx, parseInt(x), parseInt(y), text, color, font, effects)
+        if (text === undefined || text === "") {
+            return
+        }
+        return bfontjs.DrawText(this.ctx, parseInt(x), parseInt(y), text, color, font, effects)
     }
 
     DrawText(x, y, text, color, effects) {
-        this.DrawTextFont(this.font, x, y, text, color, effects)
+        return this.DrawTextFont(bfontjs.font, x, y, text, color, effects)
     }
     
     DrawRect(rect, color) {
