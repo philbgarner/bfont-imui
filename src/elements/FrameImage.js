@@ -6,7 +6,7 @@ class FrameImage extends Element {
 
         this.image = params.image ? params.image : null
         if (params.innerRect) {
-
+            this.innerRect = params.innerRect
         } else if (params.borderWidth) {
             this.innerRect = {
                 x: params.borderWidth,

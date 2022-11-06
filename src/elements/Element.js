@@ -186,6 +186,31 @@ class Element {
         return lines.join('\n')
     }
 
+    GetWordWrappedText(font, txt, rect) {
+        let lines = txt.split('\n')
+        let wrapPos = parseInt(rect.w / font.cwidth)
+        let c = 0
+        while (this.GetMaxTextWidth(font, lines.join('\n')) >= rect.w && c <= 100) {
+            let newLines = []
+            for (let l in lines) {
+                let lineWidth = lines[l].length * font.cwidth
+                if (lineWidth > rect.w) {
+                    // newLines.push(lines[l].slice(0, wrapPos).trim(),
+                    //                 lines[l].slice(wrapPos, lines[l].length).trim())
+                    let line = lines[l].substring(0, wrapPos).split('').reverse().join('')
+                    let index = line.search(/\s/)
+                    newLines.push(lines[l].slice(0, wrapPos - index).trim(),
+                                        lines[l].slice(wrapPos - index, lines[l].length).trim())
+                } else {
+                    newLines.push(lines[l])
+                }
+            }
+            lines = newLines
+            c++
+        }
+        return lines.join('\n')
+    }
+
     DrawText(imui, font, rect) {
         let textcolor = this.color
         if (this.id === imui.active) {
@@ -204,8 +229,10 @@ class Element {
                 txt += '...'
             } else if (this.wrap === 'wrap') {
                 txt = this.GetWrappedText(font, txt, this.rect)
+            } else if (this.wrap === 'word-wrap') {
+                txt = this.GetWordWrappedText(font, txt, this.rect)
             }
-        }
+    }
         imui.DrawTextFont(font, rect.x, rect.y, txt, textcolor)
     }
 
@@ -214,7 +241,7 @@ class Element {
             imui.DrawRect(rect, this.bgcolor)
         }
 
-        this.DrawText(imui, this.font, rect)
+        this.DrawText(imui, imui.font, rect)
     }
 
     Draw(imui) {

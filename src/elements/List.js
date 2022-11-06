@@ -9,7 +9,8 @@ class List extends Element {
         this.bgScrollbar = params.bgScrollbar ? params.bgScrollbar : '#645355ff'
         this.list = params.list ? params.list : []
         this.currentItem = null
-        this.scrollOffset = 0
+        this.scrollOffset = params.scrollOffset ? params.scrollOffset : 0
+        this.topDown = params.topDown ? params.topDown : true
         this.horizontal = params.horizontal ? params.horizontal : false
         this.scrollbar = params.scrollbar ? params.scrollbar : true
 

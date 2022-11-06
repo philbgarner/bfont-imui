@@ -129,6 +129,20 @@ class ImUI {
         this.ctx = this.originalCtx
     }
 
+    RemoveElement(id) {
+        let index = this.elements.findIndex(f => f.id === id)
+        if (index >= 0) {
+            let elements = []
+            for (let e in this.elements) {
+                let element = this.elements[e]
+                if (element.id !== id) {
+                    elements.push(element)
+                }
+            }
+            this.elements = elements
+        }
+    }
+
     Element(params) {
         params.type = params.type ? params.type : 'element'
         let elem = this.elements.filter(f => f.id === params.id)
@@ -156,7 +170,7 @@ class ImUI {
     }
 
     DrawText(x, y, text, color, effects) {
-        return this.DrawTextFont(bfontjs.font, x, y, text, color, effects)
+        return this.DrawTextFont(this.font, x, y, text, color, effects)
     }
     
     DrawRect(rect, color) {
