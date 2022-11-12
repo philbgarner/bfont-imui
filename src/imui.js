@@ -143,6 +143,21 @@ class ImUI {
         }
     }
 
+    ElementToTop(id) {
+        let index = this.elements.findIndex(f => f.id === id)
+        if (index >= 0) {
+            let elements = []
+            if (index - 1 >= 0) {
+                elements = this.elements.slice(0, index)
+            }
+            if (index + 1 <= this.elements.length - 1) {
+                elements.push(...this.elements.slice(index + 1))
+            }
+            elements.push(this.elements[index])
+            this.elements = elements
+        }
+    }
+
     Element(params) {
         params.type = params.type ? params.type : 'element'
         let elem = this.elements.filter(f => f.id === params.id)
