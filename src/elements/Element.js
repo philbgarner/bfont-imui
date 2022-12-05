@@ -121,7 +121,7 @@ class Element {
                 evt = true
             }
             if (imui.mouseButton > 0 && !this.state.mouseDown) {
-                this.setState({ mouseDown: true })
+                this.setState({ mouseDown: true, mouseButton: imui.mouseButton })
                 evt = true
             } else if (imui.mouseButton === 0 && this.prevState.mouseDown) {
                 this.setState({ mouseUp: true, mouseDown: false })
@@ -211,11 +211,7 @@ class Element {
         return lines.join('\n')
     }
 
-    DrawText(imui, font, rect) {
-        let textcolor = this.color
-        if (this.id === imui.active) {
-            textcolor = this.highlight ? this.highlight : textcolor
-        }
+    DoTextWrap(font) {
         let txt = this.text
 
         font = font ? font : bfontjs.Fonts().default
@@ -232,8 +228,20 @@ class Element {
             } else if (this.wrap === 'word-wrap') {
                 txt = this.GetWordWrappedText(font, txt, this.rect)
             }
+        }
+        return { text: txt, w: this.GetMaxTextWidth(font, txt), h: txt.split('\n').length * font.cheight}
     }
-        imui.DrawTextFont(font, rect.x, rect.y, txt, textcolor)
+
+    DrawText(imui, font, rect) {
+        let textcolor = this.color
+        if (this.id === imui.active) {
+            textcolor = this.highlight ? this.highlight : textcolor
+        }
+        let wrap = this.DoTextWrap(font)
+        imui.DrawTextFont(font, rect.x, rect.y, wrap.text, textcolor)
+        rect.h = wrap.h
+        rect.w = wrap.w
+        this.rect = rect
     }
 
     _Draw(imui, rect) {

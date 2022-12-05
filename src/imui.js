@@ -158,6 +158,27 @@ class ImUI {
         }
     }
 
+    GetMaxTextWidth(txt) {
+        let font = this.font
+        let lines = []
+        try {
+            if (typeof txt === 'number') {
+                txt = font.codepage.filter(f => f.codenumber === txt)[0].symbol
+            }
+            lines = txt.split('\n')
+        } catch (e) {
+            console.log('Error splitting txt parameters: ', e, ' typeof txt =', typeof txt)
+        }
+        let w = 0
+        for (let l in lines) {
+            let line = lines[l]
+            if (line.length * font.cwidth > w) {
+                w = line.length * font.cwidth
+            }
+        }
+        return w
+    }
+
     Element(params) {
         params.type = params.type ? params.type : 'element'
         let elem = this.elements.filter(f => f.id === params.id)
