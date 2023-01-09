@@ -105,7 +105,7 @@ class Element {
         let evt = false
         if (this.autosize) {
             this.rect.w = this.text.length * imui.font.cwidth
-            this.rect.h = imui.font.cheight
+            this.rect.h = imui.font.cheight * this.text.split('\n').length
         }
         if (this.state.clicked && this.id !== imui.active) {
             imui.active = this.id

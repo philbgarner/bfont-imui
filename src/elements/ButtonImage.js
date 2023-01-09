@@ -8,6 +8,8 @@ class ButtonImage extends Element {
         this.imageDown = params.imageDown ? params.imageDown : null
         this.imageHover = params.imageHover ? params.imageHover : null
         
+        this.pressedOffsetY = params.pressedOffsetY ? params.pressedOffsetY : 2
+
         if (params.innerRect) {
             this.innerRect = params.innerRect
         } else if (params.borderWidth) {
@@ -98,7 +100,7 @@ class ButtonImage extends Element {
     }
 
     _Draw(imui, rect) {
-        let offy = this.state.mouseDown ? 2 : 0
+        let offy = this.state.mouseDown ? this.pressedOffsetY : 0
         let colr = this.Hover() ? this.highlight : this.color
 
         if (this.Hover() && !this.state.mouseDown && this.imageHover) {

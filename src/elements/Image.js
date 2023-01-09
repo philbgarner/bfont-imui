@@ -12,7 +12,7 @@ class Image extends Element {
     _Draw(imui, rect) {
         if (this.image) {
             if (this.image.tagName === 'IMG') {
-                imui.ctx.drawImage(this.image, this.rect.x, this.rect.y)
+                imui.ctx.drawImage(this.image, this.rect.x, this.rect.y, this.rect.w, this.rect.h)
             } else if (this.image.draw) {
                 this.image.draw()
             }
