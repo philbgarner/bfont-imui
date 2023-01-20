@@ -3,10 +3,11 @@ import Element from './Element.js'
 class TextBoxFlat extends Element {
     constructor(params) {
         super(params)
-        this.rect.h = parseInt(this.rect.h / 16) * 16
-        this.rect.w = parseInt(this.rect.w / 9) * 9
-
         this.text = params.defaultText ? params.defaultText : ''
+        this.font = params.font ? params.font : imui.font
+
+        this.rect.h = parseInt((this.rect.h / this.font.cheight) * this.font.cheight)
+        this.rect.w = this.GetMaxTextWidth(this.font, this.text)
             
         this.editable = params.editable ? params.editable : true
 
@@ -18,7 +19,7 @@ class TextBoxFlat extends Element {
     Text() { return this.text }
 
     _Draw(imui, rect) {
-        let txt = this.text.length > (rect.w - imui.font.cwidth * 2) / imui.font.cwidth ? this.text.substr(0, parseInt((rect.w - 2) / imui.font.cwidth)) : this.text
+        let txt = this.text
 
         let textcolor = this.color
         let bgcolor = this.bgcolor
@@ -39,16 +40,10 @@ class TextBoxFlat extends Element {
         if (this.id === imui.active) {
             textcolor = this.highlight ? this.highlight : textcolor
             if (Date.now() % 1000 > 500) {
-                imui.DrawText(rect.x + imui.font.cwidth + txt.length * imui.font.cwidth, rect.y + rect.h / 2 - imui.font.cheight / 2, '_', textcolor)
+                imui.DrawTextFont(this.font, rect.x + this.GetMaxTextWidth(this.font, `${txt}`), rect.y + rect.h / 2 - this.font.cheight / 2, '_', textcolor)
             }
         }
-        imui.DrawText(rect.x + imui.font.cwidth, rect.y + rect.h / 2 - imui.font.cheight / 2, txt, textcolor)
-
-
-        let leftChar = '[', rightChar = ']'
-
-        imui.DrawText(rect.x, rect.y + rect.h / 2 - imui.font.cheight / 2, leftChar, textcolor)
-        imui.DrawText(rect.x + rect.w - imui.font.cwidth, rect.y + rect.h / 2 - imui.font.cheight / 2, rightChar, textcolor)
+        imui.DrawTextFont(this.font, rect.x, rect.y + rect.h / 2 - this.font.cheight / 2, txt, textcolor)
     }
 }
 

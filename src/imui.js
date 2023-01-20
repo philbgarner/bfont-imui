@@ -145,6 +145,10 @@ class ImUI {
         }
     }
 
+    RemoveElements() {
+        this.elements = []
+    }
+
     ElementToTop(id) {
         let index = this.elements.findIndex(f => f.id === id)
         if (index >= 0) {

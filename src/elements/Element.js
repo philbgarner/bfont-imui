@@ -19,7 +19,7 @@ class Element {
         
         this.wrap = params.wrap ? params.wrap : ''
 
-        this.font = params.font ? params.font : null
+        this.font = params.font ? params.font : imui.font
 
         this.rect.x = params.x ? params.x : this.rect.x
         this.rect.y = params.y ? params.y : this.rect.y
@@ -103,9 +103,13 @@ class Element {
 
     Update(imui, eventHandled) {
         let evt = false
+        let cfont = this.font
         if (this.autosize) {
-            this.rect.w = this.text.length * imui.font.cwidth
-            this.rect.h = imui.font.cheight * this.text.split('\n').length
+            this.rect.w = this.text.length * cfont.cwidth
+            this.rect.h = cfont.cheight
+            if (this.text && this.text.length > 0) {
+                this.rect.h = cfont.cheight * this.text.split('\n').length
+            }
         }
         if (this.state.clicked && this.id !== imui.active) {
             imui.active = this.id
@@ -158,8 +162,17 @@ class Element {
         let w = 0
         for (let l in lines) {
             let line = lines[l]
-            if (line.length * font.cwidth > w) {
-                w = line.length * font.cwidth
+            let lineLen = 0
+            for (let c in line) {
+                let char = font.codepage.filter(f => f.symbol === line[c])
+                if (char.length > 0) {
+                    if (char[0].rect) {
+                        lineLen += char[0].rect.w
+                    }
+                }
+            }
+            if (lineLen > w) {
+                w = lineLen
             }
         }
         return w
@@ -212,7 +225,7 @@ class Element {
     }
 
     DoTextWrap(font) {
-        let txt = this.text
+        let txt = this.text ? this.text : ''
 
         font = font ? font : bfontjs.Fonts().default
         if (this.GetMaxTextWidth(font, txt) > this.rect.w) {
@@ -229,6 +242,7 @@ class Element {
                 txt = this.GetWordWrappedText(font, txt, this.rect)
             }
         }
+        txt = typeof txt === 'string' ? txt : ''
         return { text: txt, w: this.GetMaxTextWidth(font, txt), h: txt.split('\n').length * font.cheight}
     }
 
@@ -248,8 +262,8 @@ class Element {
         if (this.bgcolor) {
             imui.DrawRect(rect, this.bgcolor)
         }
-
-        this.DrawText(imui, imui.font, rect)
+        let cfont = this.font
+        this.DrawText(imui, cfont, rect)
     }
 
     Draw(imui) {
