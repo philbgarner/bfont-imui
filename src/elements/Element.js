@@ -103,7 +103,7 @@ class Element {
 
     Update(imui, eventHandled) {
         let evt = false
-        let cfont = this.font
+        let cfont = this.font ? this.font : font
         if (this.autosize) {
             this.rect.w = this.text.length * cfont.cwidth
             this.rect.h = cfont.cheight
@@ -262,7 +262,7 @@ class Element {
         if (this.bgcolor) {
             imui.DrawRect(rect, this.bgcolor)
         }
-        let cfont = this.font
+        let cfont = this.font ? this.font : font
         this.DrawText(imui, cfont, rect)
     }
 
