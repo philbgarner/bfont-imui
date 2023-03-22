@@ -243,7 +243,9 @@ class Element {
             }
         }
         txt = typeof txt === 'string' ? txt : ''
-        return { text: txt, w: this.GetMaxTextWidth(font, txt), h: txt.split('\n').length * font.cheight}
+        let wid = this.GetMaxTextWidth(font, txt)
+        let hgt = txt.split('\n').length * font.cheight
+        return { text: txt, w: wid > this.rect.w ? wid : this.rect.w, h: hgt > this.rect.h ? hgt : this.rect.h }
     }
 
     DrawText(imui, font, rect) {

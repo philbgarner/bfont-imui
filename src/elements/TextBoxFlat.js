@@ -4,10 +4,15 @@ class TextBoxFlat extends Element {
     constructor(params) {
         super(params)
         this.text = params.defaultText ? params.defaultText : ''
-        this.font = params.font ? params.font : imui.font
+        this.font = params.font ? params.font : null
 
-        this.rect.h = parseInt((this.rect.h / this.font.cheight) * this.font.cheight)
-        this.rect.w = this.GetMaxTextWidth(this.font, this.text)
+        if (this.font) {
+            this.rect.h = parseInt((this.rect.h / this.font.cheight) * this.font.cheight)
+            this.rect.w = this.GetMaxTextWidth(this.font, this.text)
+        } else {
+            this.rect.w = 8
+            this.rect.h = 8
+        }
             
         this.editable = params.editable ? params.editable : true
 
@@ -19,6 +24,9 @@ class TextBoxFlat extends Element {
     Text() { return this.text }
 
     _Draw(imui, rect) {
+        if (!this.font) {
+            this.font = imui.font
+        }
         let txt = this.text
 
         let textcolor = this.color
