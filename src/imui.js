@@ -185,7 +185,7 @@ class ImUI {
         return w
     }
 
-    Element(params) {
+    Element(params, parent) {
         params.type = params.type ? params.type : 'element'
         let elem = this.elements.filter(f => f.id === params.id)
         if (elem.length === 0) {
@@ -195,6 +195,10 @@ class ImUI {
             this.elements.push(el)
             this.postUpdateIds.push(params.id)
             this.lastRect = el.rect
+            if (parent) {
+                el.parentRect = parent.rect
+                el.parent = parent
+            }
             return el
         } else {
             this.postUpdateIds.push(params.id)
@@ -202,6 +206,10 @@ class ImUI {
                 elem[0][p] = params[p]
             }
             this.lastRect = elem[0].rect
+            if (parent && !elem[0].parent) {
+                elem[0].parentRect = parent.rect
+                elem[0].parent = parent
+            }
             return elem[0]
         }
     }
