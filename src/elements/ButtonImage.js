@@ -34,69 +34,69 @@ class ButtonImage extends Element {
             
             // Top Right Corner
             let x2 = image.width - (this.innerRect.x + this.innerRect.w)
-            imui.ctx.drawImage(image, image.width - x2, 0, x2, this.innerRect.y, this.rect.w - x2, this.rect.y, x2, this.innerRect.y)
+            imui.ctx.drawImage(image, image.width - x2, 0, x2, this.innerRect.y, this.rect.x + this.rect.w - x2, this.rect.y, x2, this.innerRect.y)
 
             // Bottom Right Corner
             let y2 = image.height - (this.innerRect.y + this.innerRect.h)
-            imui.ctx.drawImage(image, image.width - x2, image.height - y2, x2, y2, this.rect.w - x2, this.rect.h - y2, x2, y2)
+            imui.ctx.drawImage(image, image.width - x2, image.height - y2, x2, y2, this.rect.x + this.rect.w - x2, this.rect.y + this.rect.h - y2, x2, y2)
 
             // Bottom Left Corner
-            imui.ctx.drawImage(image, 0, image.height - y2, this.innerRect.x, this.innerRect.y, this.rect.x, this.rect.h - y2, this.innerRect.x, y2)
+            imui.ctx.drawImage(image, 0, image.height - y2, this.innerRect.x, y2, this.rect.x, this.rect.y + this.rect.h - y2, this.innerRect.x, y2)
 
             // Top Middle Section
-            for (let dx = this.rect.x + this.innerRect.x; dx < this.rect.x + this.rect.w - this.innerRect.x; dx += image.width - this.innerRect.x * 2) {
-                let dw = image.width - this.innerRect.x * 2
-                if (dx + dw > this.rect.x + this.rect.w - this.innerRect.x) {
-                    dw = this.rect.x + this.rect.w - this.innerRect.x - dx
+            for (let dx = this.rect.x + this.innerRect.x; dx < this.rect.x + this.rect.w - x2; dx += this.innerRect.w) {
+                let dw = image.width - x2
+                if (dx + dw > this.rect.x + this.rect.w - x2) {
+                    dw = this.rect.x + this.rect.w - x2 - dx
                 }
                 imui.ctx.drawImage(image, this.innerRect.x, 0, dw, this.innerRect.y, dx, this.rect.y, dw, this.innerRect.y)
             }
             // Bottom Middle Section
-            for (let dx = this.rect.x + this.innerRect.x; dx < this.rect.x + this.rect.w - this.innerRect.x; dx += image.width - this.innerRect.x * 2) {
-                let dw = image.width - this.innerRect.x * 2
-                if (dx + dw > this.rect.x + this.rect.w - this.innerRect.x) {
-                    dw = this.rect.x + this.rect.w - this.innerRect.x - dx
+            for (let dx = this.rect.x + this.innerRect.x; dx < this.rect.x + this.rect.w - x2; dx += this.innerRect.w) {
+                let dw = image.width - x2
+                if (dx + dw > this.rect.x + this.rect.w - x2) {
+                    dw = this.rect.x + this.rect.w - x2 - dx
                 }
-                imui.ctx.drawImage(image, this.innerRect.x, image.height - this.innerRect.y, dw, this.innerRect.y, dx, this.rect.y + this.rect.h - this.innerRect.y, dw, this.innerRect.y)
+                imui.ctx.drawImage(image, this.innerRect.x, image.height - y2, dw, y2, dx, this.rect.y + this.rect.h - y2, dw, y2)
             }
 
             // Left Middle Section
-            for (let dy = this.rect.y + this.innerRect.y; dy < this.rect.y + this.rect.h - this.innerRect.y; dy += image.height - this.innerRect.y * 2) {
-                let dh = image.height - this.innerRect.y * 2
-                if (dy + dh > this.rect.y + this.rect.h - this.innerRect.y) {
-                    dh = this.rect.y + this.rect.h - this.innerRect.y - dy
+            for (let dy = this.rect.y + this.innerRect.y; dy < this.rect.y + this.rect.h - y2; dy += this.innerRect.h) {
+                let dh = image.height - y2
+                if (dy + dh > this.rect.y + this.rect.h - y2) {
+                    dh = this.rect.y + this.rect.h - y2 - dy
                 }
                 imui.ctx.drawImage(image, 0, this.innerRect.y, this.innerRect.x, dh, this.rect.x, dy, this.innerRect.x, dh)
             }
             // Right Middle Section
-            for (let dy = this.rect.y + this.innerRect.y; dy < this.rect.y + this.rect.h - this.innerRect.y; dy += image.height - this.innerRect.y * 2) {
-                let dh = image.height - this.innerRect.y * 2
-                if (dy + dh > this.rect.y + this.rect.h - this.innerRect.y) {
-                    dh = this.rect.y + this.rect.h - this.innerRect.y - dy
+            for (let dy = this.rect.y + this.innerRect.y; dy < this.rect.y + this.rect.h - y2; dy += this.innerRect.y) {
+                let dh = image.height - y2
+                if (dy + dh > this.rect.y + this.rect.h - y2) {
+                    dh = this.rect.y + this.rect.h - y2 - dy
                 }
-                imui.ctx.drawImage(image, image.width - this.innerRect.x, this.innerRect.y, this.innerRect.x, dh, this.rect.x + this.rect.w - this.innerRect.x, dy, this.innerRect.x, dh)
+                imui.ctx.drawImage(image, image.width - x2, this.innerRect.y, x2, dh, this.rect.x + this.rect.w - x2, dy, x2, dh)
             }
 
             // Centre
             
             let sx = this.innerRect.x
             let sy = this.innerRect.y
-            let sw = image.width - this.innerRect.x * 2
-            let sh = image.height - this.innerRect.y * 2
+            let sw = image.width - this.innerRect.w
+            let sh = image.height - this.innerRect.h
             let dx = this.innerRect.x + this.rect.x
             let dy = this.innerRect.y + this.rect.y
-            while (dy < this.rect.y + this.rect.h - this.innerRect.y) {
+            while (dy < this.rect.y + this.rect.h - y2) {
                 let w = sw
                 let h = sh
-                if (dx + w > this.rect.x + this.rect.w - this.innerRect.x) {
-                    w = this.rect.x + this.rect.w - this.innerRect.x - dx
+                if (dx + w > this.rect.x + this.rect.w - x2) {
+                    w = this.rect.x + this.rect.w - x2 - dx
                 }
-                if (dy + h > this.rect.y + this.rect.h - this.innerRect.y) {
-                    h = this.rect.y + this.rect.h - this.innerRect.y - dy
+                if (dy + h > this.rect.y + this.rect.h - y2) {
+                    h = this.rect.y + this.rect.h - y2 - dy
                 }
                 imui.ctx.drawImage(image, sx, sy, w, h, dx, dy, w, h)
                 dx += sw
-                if (dx > this.rect.x + this.rect.w - this.innerRect.x) {
+                if (dx > this.rect.x + this.rect.w - x2) {
                     dx = this.innerRect.x + this.rect.x
                     dy += sh
                 }
