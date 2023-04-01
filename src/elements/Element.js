@@ -16,6 +16,7 @@ class Element {
         this.bgcolor = params.bgcolor ? params.bgcolor : undefined
         this.text = params.text ? params.text : ''
         this.prevText = this.text
+        this.parentRect = params.parentRect ? params.parentRect : null
         
         this.wrap = params.wrap ? params.wrap : ''
 
@@ -245,7 +246,11 @@ class Element {
         txt = typeof txt === 'string' ? txt : ''
         let wid = this.GetMaxTextWidth(font, txt)
         let hgt = txt.split('\n').length * font.cheight
-        return { text: txt, w: wid > this.rect.w ? wid : this.rect.w, h: hgt > this.rect.h ? hgt : this.rect.h }
+        let ret = { text: txt, w: wid > this.rect.w ? wid : this.rect.w, h: hgt > this.rect.h ? hgt : this.rect.h }
+        if (this.autosize) {
+            this.rect = ret
+        }
+        return ret
     }
 
     DrawText(imui, font, rect) {
@@ -270,24 +275,18 @@ class Element {
 
     Draw(imui) {
         let rect = this.rect
-        if (this.buffer) {
-            imui.ChangeContext(this.buffer)
-            rect = { x: 0, y: 0, w: this.rect.w, h: this.rect.h }
-
-            if (this.DidChangeState() || (!this.initialDrawComplete)) {
-                if (this.buffer) {
-                    this.bufferCtx.clearRect(0, 0, rect.w, rect.h)
-                }
-                
-                this._Draw(imui, rect)
-                this.initialDrawComplete = true
-            }
-
-            imui.ResetContext()
-            imui.ctx.drawImage(this.buffer, this.rect.x, this.rect.y)
-        } else {
-            this._Draw(imui, this.rect)
+        let ctx = imui.ctx
+        ctx.save()
+        if (this.parentRect) {
+            rect.x += this.parentRect.x
+            rect.y += this.parentRect.y
+            ctx.beginPath()
+            ctx.rect(this.parentRect.x, this.parentRect.y, this.parentRect.w, this.parentRect.h)
+            ctx.closePath()
+            ctx.clip()
         }
+        this._Draw(imui, rect)
+        ctx.restore()
     }
 }
 
