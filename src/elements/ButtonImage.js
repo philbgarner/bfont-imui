@@ -31,12 +31,17 @@ class ButtonImage extends Element {
         if (image) {
             // Top Left Corner
             imui.ctx.drawImage(image, 0, 0, this.innerRect.x, this.innerRect.y, this.rect.x, this.rect.y, this.innerRect.x, this.innerRect.y)
+            
             // Top Right Corner
-            imui.ctx.drawImage(image, image.width - this.innerRect.x, 0, this.innerRect.x, this.innerRect.y, this.rect.x + this.rect.w - this.innerRect.x, this.rect.y, this.innerRect.x, this.innerRect.y)
-            // Bottom Left Corner
-            imui.ctx.drawImage(image, 0, image.height - this.innerRect.y, this.innerRect.x, this.innerRect.y, this.rect.x, this.rect.y + this.rect.h - this.innerRect.y, this.innerRect.x, this.innerRect.y)
+            let x2 = image.width - (this.innerRect.x + this.innerRect.w)
+            imui.ctx.drawImage(image, image.width - x2, 0, x2, this.innerRect.y, this.rect.w - x2, this.rect.y, x2, this.innerRect.y)
+
             // Bottom Right Corner
-            imui.ctx.drawImage(image, image.width - this.innerRect.x, image.height - this.innerRect.y, this.innerRect.x, this.innerRect.y, this.rect.x + this.rect.w - this.innerRect.x, this.rect.y + this.rect.h - this.innerRect.y, this.innerRect.x, this.innerRect.y)
+            let y2 = image.height - (this.innerRect.y + this.innerRect.h)
+            imui.ctx.drawImage(image, image.width - x2, image.height - y2, x2, y2, this.rect.w - x2, this.rect.h - y2, x2, y2)
+
+            // Bottom Left Corner
+            imui.ctx.drawImage(image, 0, image.height - y2, this.innerRect.x, this.innerRect.y, this.rect.x, this.rect.h - y2, this.innerRect.x, y2)
 
             // Top Middle Section
             for (let dx = this.rect.x + this.innerRect.x; dx < this.rect.x + this.rect.w - this.innerRect.x; dx += image.width - this.innerRect.x * 2) {
