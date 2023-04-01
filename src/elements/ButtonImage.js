@@ -69,7 +69,7 @@ class ButtonImage extends Element {
                 imui.ctx.drawImage(image, 0, this.innerRect.y, this.innerRect.x, dh, this.rect.x, dy, this.innerRect.x, dh)
             }
             // Right Middle Section
-            for (let dy = this.rect.y + this.innerRect.y; dy < this.rect.y + this.rect.h - y2; dy += this.innerRect.y) {
+            for (let dy = this.rect.y + this.innerRect.y; dy < this.rect.y + this.rect.h - y2; dy += this.innerRect.h) {
                 let dh = image.height - y2
                 if (dy + dh > this.rect.y + this.rect.h - y2) {
                     dh = this.rect.y + this.rect.h - y2 - dy
@@ -81,8 +81,8 @@ class ButtonImage extends Element {
             
             let sx = this.innerRect.x
             let sy = this.innerRect.y
-            let sw = image.width - this.innerRect.w
-            let sh = image.height - this.innerRect.h
+            let sw = this.innerRect.w
+            let sh = this.innerRect.h
             let dx = this.innerRect.x + this.rect.x
             let dy = this.innerRect.y + this.rect.y
             while (dy < this.rect.y + this.rect.h - y2) {
