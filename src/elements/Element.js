@@ -41,30 +41,6 @@ class Element {
                 change: false
             }
 
-        this.buffer = null
-        if (params.drawBuffer) {
-            this.InitializeBuffer()
-        }
-    }
-
-    InitializeBuffer(margin) {
-        let mx = 0, my = 0
-        if (margin) {
-            mx = margin.x
-            my = margin.y
-            this.margin = margin
-        } else {
-            this.margin = { x: 0, y: 0 }
-        }
-        try {
-            this.buffer = document.createElement('canvas')
-            this.buffer.width = this.rect.w + mx
-            this.buffer.height = this.rect.h + my
-            this.bufferCtx = this.buffer.getContext('2d')
-        } catch {
-            this.buffer = createCanvas(this.rect.w + mx, this.rect.h + my)
-            this.bufferCtx = this.buffer.getContext('2d')
-        }
     }
 
     DidChangeState() {
@@ -86,7 +62,7 @@ class Element {
     }
 
     InsideRect(x, y, rect) {
-        let r = rect ? rect : this.rect
+        let r = rect ? rect : this.Rect()
         return x >= r.x && x < r.x + r.w && y >= r.y && y < r.y + r.h
     }
 
@@ -102,22 +78,36 @@ class Element {
         }
     }
 
+    Rect() {
+        let rect = {
+            x: this.rect.x,
+            y: this.rect.y,
+            w: this.rect.w,
+            h: this.rect.h
+        }
+        if (this.parentRect) {
+            rect.x += this.parentRect.x
+            rect.y += this.parentRect.y
+        }
+        return rect
+    }
+
     Update(imui, eventHandled) {
         let evt = false
-        let cfont = this.font ? this.font : imui.font
-        if (this.autosize) {
-            this.rect.w = this.text.length * cfont.cwidth
-            this.rect.h = cfont.cheight
-            if (this.text && this.text.length > 0) {
-                this.rect.h = cfont.cheight * this.text.split('\n').length
-            }
-        }
+        //let cfont = this.font ? this.font : imui.font
+        // if (this.autosize) {
+        //     this.Rect().w = this.text.length * cfont.cwidth
+        //     this.Rect().h = cfont.cheight
+        //     if (this.text && this.text.length > 0) {
+        //         this.Rect().h = cfont.cheight * this.text.split('\n').length
+        //     }
+        // }
         if (this.state.clicked && this.id !== imui.active) {
             imui.active = this.id
             this.setState({ changed: true })
             evt = true
         }
-        if (imui.mousePos.x >= this.rect.x && imui.mousePos.y >= this.rect.y && imui.mousePos.x <= this.rect.x + this.rect.w && imui.mousePos.y <= this.rect.y + this.rect.h) {
+        if (imui.mousePos.x >= this.Rect().x && imui.mousePos.y >= this.Rect().y && imui.mousePos.x <= this.Rect().x + this.Rect().w && imui.mousePos.y <= this.Rect().y + this.Rect().h) {
             if (this.state.mouseOver && this.state.clicked) {
                 this.setState({ mouseOver: true, clicked: false})
                 evt = true
@@ -229,27 +219,27 @@ class Element {
         let txt = this.text ? this.text : ''
 
         font = font ? font : bfontjs.Fonts().default
-        if (this.GetMaxTextWidth(font, txt) > this.rect.w) {
+        if (this.GetMaxTextWidth(font, txt) > this.Rect().w) {
             if (this.wrap === 'clip') {
-                let rectCharWidth = Math.floor(this.rect.w / font.cwidth)
+                let rectCharWidth = Math.floor(this.Rect().w / font.cwidth)
                 txt = txt.substring(0, rectCharWidth)
             } else if (this.wrap === 'ellipses') {
-                let rectCharWidth = Math.floor(this.rect.w / font.cwidth)
+                let rectCharWidth = Math.floor(this.Rect().w / font.cwidth)
                 txt = txt.substring(0, rectCharWidth - 3)
                 txt += '...'
             } else if (this.wrap === 'wrap') {
-                txt = this.GetWrappedText(font, txt, this.rect)
+                txt = this.GetWrappedText(font, txt, this.Rect())
             } else if (this.wrap === 'word-wrap') {
-                txt = this.GetWordWrappedText(font, txt, this.rect)
+                txt = this.GetWordWrappedText(font, txt, this.Rect())
             }
         }
         txt = typeof txt === 'string' ? txt : ''
         let wid = this.GetMaxTextWidth(font, txt)
         let hgt = txt.split('\n').length * font.cheight
-        let ret = { text: txt, w: wid > this.rect.w ? wid : this.rect.w, h: hgt > this.rect.h ? hgt : this.rect.h }
-        if (this.autosize) {
-            this.rect = ret
-        }
+        let ret = { text: txt, w: wid > this.Rect().w ? wid : this.Rect().w, h: hgt > this.Rect().h ? hgt : this.Rect().h }
+        // if (this.autosize) {
+        //     this.rect = ret
+        // }
         return ret
     }
 
@@ -262,7 +252,6 @@ class Element {
         imui.DrawTextFont(font, rect.x, rect.y, wrap.text, textcolor)
         rect.h = wrap.h
         rect.w = wrap.w
-        this.rect = rect
     }
 
     _Draw(imui, rect) {
@@ -274,18 +263,15 @@ class Element {
     }
 
     Draw(imui) {
-        let rect = this.rect
         let ctx = imui.ctx
         ctx.save()
         if (this.parentRect) {
-            rect.x += this.parentRect.x
-            rect.y += this.parentRect.y
             ctx.beginPath()
             ctx.rect(this.parentRect.x, this.parentRect.y, this.parentRect.w, this.parentRect.h)
             ctx.closePath()
             ctx.clip()
         }
-        this._Draw(imui, rect)
+        this._Draw(imui, this.Rect())
         ctx.restore()
     }
 }

@@ -196,7 +196,7 @@ class ImUI {
             this.postUpdateIds.push(params.id)
             this.lastRect = el.rect
             if (parent) {
-                el.parentRect = parent.rect
+                el.parentRect = parent.Rect()
                 el.parent = parent
             }
             return el
@@ -207,37 +207,13 @@ class ImUI {
             }
             this.lastRect = elem[0].rect
             if (parent && !elem[0].parent) {
-                elem[0].parentRect = parent.rect
+                elem[0].parentRect = parent.Rect()
                 elem[0].parent = parent
             }
             return elem[0]
         }
     }
 
-    Layout(params) {
-        params.layout = params.layout ? params.layout : 'row'
-        if (this.lastRect) {
-            if (params.layout.includes('row')) {
-                if (params.rect) {
-                    params.rect.x += this.lastRect.x
-                    params.rect.y += this.lastRect.y + this.lastRect.h
-                } else {
-                    params.x += this.lastRect.x
-                    params.y += this.lastRect.y + this.lastRect.h
-                }
-            } else if (params.layout.includes('column')) {
-                if (params.rect) {
-                    params.rect.x += this.lastRect.x + this.lastRect.w
-                    params.rect.y += this.lastRect.y
-                } else {
-                    params.x += this.lastRect.x + this.lastRect.w
-                    params.y += this.lastRect.y
-                }
-            }
-        }
-        return this.Element(params)
-    }
-    
     DrawTextFont(font, x, y, text, color, effects) {
         if (text === undefined || text === "") {
             return
