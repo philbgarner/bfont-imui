@@ -3,16 +3,18 @@ import Element from './Element.js'
 class Image extends Element {
     constructor(params) {
         super(params)
-        // this.rect.h = parseInt(this.rect.h / 16) * 16
-        // this.rect.w = parseInt(this.rect.w / 9) * 9
 
         this.image = params.image ? params.image : null
+        if (!this.rect.w || !this.rect.h) {
+            this.rect.h = this.image.height
+            this.rect.w = this.image.width
+        }
     }
 
     _Draw(imui, rect) {
         if (this.image) {
             if (this.image.tagName === 'IMG') {
-                imui.ctx.drawImage(this.image, this.rect.x, this.rect.y, this.rect.w, this.rect.h)
+                imui.ctx.drawImage(this.image, this.Rect().x, this.Rect().y, this.Rect().w, this.Rect().h)
             } else if (this.image.draw) {
                 this.image.draw()
             }
