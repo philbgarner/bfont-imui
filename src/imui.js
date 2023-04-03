@@ -1,5 +1,12 @@
 import { GetElementType } from './elements.js'
 
+let updateDelay = 8
+
+function BezierBlend(t)
+{
+    return t * t * (3.0 - 2.0 * t)
+}
+
 class ImUI {
     constructor(canvas, font) {
         this.canvas = canvas
@@ -116,7 +123,7 @@ class ImUI {
         
                 this.Update()
             
-                setTimeout(() => this.UpdateThread(), 16)
+                setTimeout(() => this.UpdateThread(), updateDelay)
             }
         } catch (e) { console.error(e) }
     }
@@ -203,7 +210,9 @@ class ImUI {
         } else {
             this.postUpdateIds.push(params.id)
             for (let p in params) {
-                elem[0][p] = params[p]
+                if (p !== 'anim') {
+                    elem[0][p] = params[p]
+                }
             }
             this.lastRect = elem[0].rect
             if (parent && !elem[0].parent) {
@@ -263,4 +272,4 @@ class ImUI {
     }
 }
 
-export { ImUI }
+export { ImUI, BezierBlend, updateDelay }

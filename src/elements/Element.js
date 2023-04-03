@@ -1,4 +1,5 @@
 import { createCanvas } from 'canvas'
+import { BezierBlend, updateDelay } from '../imui.js'
 
 class Element {
     constructor(params) {
@@ -17,6 +18,8 @@ class Element {
         this.text = params.text ? params.text : ''
         this.prevText = this.text
         this.parentRect = params.parentRect ? params.parentRect : null
+
+        this.anim = params.anim ? params.anim : null
         
         this.wrap = params.wrap ? params.wrap : ''
 
@@ -137,6 +140,45 @@ class Element {
             this.setState({ change: false })
         }        
         
+        // anim: {
+        //     curve: 'bezier',
+        //     duration: 1000,
+        //     params: {
+        //         x: 0, y: 400
+        //     }
+        if (this.anim) {
+            if (this.anim.curve === 'bezier') {
+                this.anim.elapsed = this.anim.elapsed === undefined ? 0 : this.anim.elapsed
+                for (let param in this.anim.params) {
+                    let startVal = this.anim.params[param]
+                    this.anim.destination = this.anim.destination ? this.anim.destination : {}
+                    if (param === 'x' || param === 'y' || param === 'w' || param === 'h') {
+                        this.anim.destination[param] = this.anim.destination[param] !== undefined ? this.anim.destination[param] : this.rect[param]
+                        if (this.anim.destination[param] > startVal) {
+                            this.rect[param] = startVal + (this.anim.destination[param] - startVal) * BezierBlend(this.anim.elapsed / this.anim.duration)
+                        } else {
+                            this.rect[param] = startVal - (startVal - this.anim.destination[param]) * BezierBlend(this.anim.elapsed / this.anim.duration)
+                        }
+                        
+                    }
+                    
+                }
+                this.anim.elapsed += updateDelay
+                if (this.anim.elapsed >= this.anim.duration) {
+
+                    for (let param in this.anim.params) {
+                        if (param === 'x' || param === 'y' || param === 'w' || param === 'h') {
+                            this.rect[param] = this.anim.destination[param]
+                        }                        
+                    }
+
+                    if (this.anim.onComplete) {
+                        this.anim.onComplete(this)
+                    }
+                    this.anim = null
+                }
+            }
+        }
         return evt
     }
 
