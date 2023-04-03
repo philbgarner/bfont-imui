@@ -155,9 +155,9 @@ class Element {
                     if (param === 'x' || param === 'y' || param === 'w' || param === 'h') {
                         this.anim.destination[param] = this.anim.destination[param] !== undefined ? this.anim.destination[param] : this.rect[param]
                         if (this.anim.destination[param] > startVal) {
-                            this.rect[param] = startVal + (this.anim.destination[param] - startVal) * BezierBlend(this.anim.elapsed / this.anim.duration)
+                            this.rect[param] = parseInt(startVal + (this.anim.destination[param] - startVal) * BezierBlend(this.anim.elapsed / this.anim.duration))
                         } else {
-                            this.rect[param] = startVal - (startVal - this.anim.destination[param]) * BezierBlend(this.anim.elapsed / this.anim.duration)
+                            this.rect[param] = parseInt(startVal - (startVal - this.anim.destination[param]) * BezierBlend(this.anim.elapsed / this.anim.duration))
                         }
                         
                     }
