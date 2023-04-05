@@ -104,48 +104,49 @@ class Element {
         //         this.Rect().h = cfont.cheight * this.text.split('\n').length
         //     }
         // }
-        if (this.state.clicked && this.id !== imui.active) {
-            imui.active = this.id
-            this.setState({ changed: true })
-            evt = true
-        }
-        if (imui.mousePos.x >= this.Rect().x && imui.mousePos.y >= this.Rect().y && imui.mousePos.x <= this.Rect().x + this.Rect().w && imui.mousePos.y <= this.Rect().y + this.Rect().h) {
-            if (this.state.mouseOver && this.state.clicked) {
-                this.setState({ mouseOver: true, clicked: false})
-                evt = true
-            } else if (!eventHandled) {
-                this.setState({ mouseOver: true })
+        if (!this.anim) {
+            if (this.state.clicked && this.id !== imui.active) {
+                imui.active = this.id
+                this.setState({ changed: true })
                 evt = true
             }
-            if (imui.mouseButton > 0 && !this.state.mouseDown) {
-                this.setState({ mouseDown: true, mouseButton: imui.mouseButton })
-                evt = true
-            } else if (imui.mouseButton === 0 && this.prevState.mouseDown) {
-                this.setState({ mouseUp: true, mouseDown: false })
+            if (imui.mousePos.x >= this.Rect().x && imui.mousePos.y >= this.Rect().y && imui.mousePos.x <= this.Rect().x + this.Rect().w && imui.mousePos.y <= this.Rect().y + this.Rect().h) {
+                if (this.state.mouseOver && this.state.clicked) {
+                    this.setState({ mouseOver: true, clicked: false})
+                    evt = true
+                } else if (!eventHandled) {
+                    this.setState({ mouseOver: true })
+                    evt = true
+                }
+                if (imui.mouseButton > 0 && !this.state.mouseDown) {
+                    this.setState({ mouseDown: true, mouseButton: imui.mouseButton })
+                    evt = true
+                } else if (imui.mouseButton === 0 && this.prevState.mouseDown) {
+                    this.setState({ mouseUp: true, mouseDown: false })
+                    evt = true
+                }
+            } else {
+                this.setState({ mouseOver: false, mouseDown: false, mouseUp: false, clicked: false })
+            }
+            if (imui.mouseButton === 0 && this.state.mouseUp) {
+                this.setState({ mouseUp: false, clicked: true })
+                imui.active = this.id
                 evt = true
             }
+            if (this.text !== this.prevText) {
+                this.setState({ change: true })
+                this.prevText = this.text
+            } else {
+                this.setState({ change: false })
+            }        
+            
+            // anim: {
+            //     curve: 'bezier',
+            //     duration: 1000,
+            //     params: {
+            //         x: 0, y: 400
+            //     }
         } else {
-            this.setState({ mouseOver: false, mouseDown: false, mouseUp: false, clicked: false })
-        }
-        if (imui.mouseButton === 0 && this.state.mouseUp) {
-            this.setState({ mouseUp: false, clicked: true })
-            imui.active = this.id
-            evt = true
-        }
-        if (this.text !== this.prevText) {
-            this.setState({ change: true })
-            this.prevText = this.text
-        } else {
-            this.setState({ change: false })
-        }        
-        
-        // anim: {
-        //     curve: 'bezier',
-        //     duration: 1000,
-        //     params: {
-        //         x: 0, y: 400
-        //     }
-        if (this.anim) {
             if (this.anim.curve === 'bezier') {
                 this.anim.elapsed = this.anim.elapsed === undefined ? 0 : this.anim.elapsed
                 for (let param in this.anim.params) {
