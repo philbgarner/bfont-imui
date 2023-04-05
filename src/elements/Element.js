@@ -315,6 +315,16 @@ class Element {
         this._Draw(imui, this.Rect())
         ctx.restore()
     }
+
+    Animate(duration, fromRect, toRect, onComplete) {
+        this.anim = {
+            curve: 'bezier',
+            duration: duration,
+            params: fromRect,
+            onComplete: onComplete
+        }
+        this.rect = toRect
+    }
 }
 
 export default Element
