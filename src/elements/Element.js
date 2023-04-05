@@ -17,7 +17,6 @@ class Element {
         this.bgcolor = params.bgcolor ? params.bgcolor : undefined
         this.text = params.text ? params.text : ''
         this.prevText = this.text
-        this.parentRect = params.parentRect ? params.parentRect : null
 
         this.anim = params.anim ? params.anim : null
         
@@ -88,9 +87,9 @@ class Element {
             w: this.rect.w,
             h: this.rect.h
         }
-        if (this.parentRect) {
-            rect.x += this.parentRect.x
-            rect.y += this.parentRect.y
+        if (this.parent) {
+            rect.x += this.parent.Rect().x
+            rect.y += this.parent.Rect().y
         }
         return rect
     }
@@ -307,9 +306,9 @@ class Element {
     Draw(imui) {
         let ctx = imui.ctx
         ctx.save()
-        if (this.parentRect) {
+        if (this.parent) {
             ctx.beginPath()
-            ctx.rect(this.parentRect.x, this.parentRect.y, this.parentRect.w, this.parentRect.h)
+            ctx.rect(this.parent.Rect().x, this.parent.Rect().y, this.parent.Rect().w, this.parent.Rect().h)
             ctx.closePath()
             ctx.clip()
         }

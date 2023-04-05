@@ -203,7 +203,6 @@ class ImUI {
             this.postUpdateIds.push(params.id)
             this.lastRect = el.rect
             if (parent) {
-                el.parentRect = parent.Rect()
                 el.parent = parent
             }
             return el
@@ -216,7 +215,6 @@ class ImUI {
             }
             this.lastRect = elem[0].rect
             if (parent && !elem[0].parent) {
-                elem[0].parentRect = parent.Rect()
                 elem[0].parent = parent
             }
             return elem[0]
