@@ -321,7 +321,7 @@ class Element {
             curve: 'bezier',
             duration: duration,
             params: fromRect,
-            onComplete: onComplete
+            onComplete: onComplete ? onComplete : () => {}
         }
         this.rect = toRect
     }
