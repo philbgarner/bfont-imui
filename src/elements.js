@@ -8,6 +8,7 @@ import List from './elements/List.js'
 import Image from './elements/Image.js'
 import FrameImage from './elements/FrameImage.js'
 import ButtonImage from './elements/ButtonImage.js'
+import ListImage from './elements/ListImage.js'
 
 function GetElementType(type) {
     switch(type.toLowerCase()) {
@@ -31,6 +32,8 @@ function GetElementType(type) {
             return FrameImage
         case 'buttonimage':
             return ButtonImage
+        case 'listimage':
+            return ListImage
     }
 }
 

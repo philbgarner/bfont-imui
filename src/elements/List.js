@@ -3,9 +3,6 @@ import Element from './Element.js'
 class List extends Element {
     constructor(params) {
         super(params)
-        this.rect.h = parseInt(this.rect.h / 16) * 16
-        this.rect.w = parseInt(this.rect.w / 9) * 9
-
         this.bgScrollbar = params.bgScrollbar ? params.bgScrollbar : '#645355ff'
         this.list = params.list ? params.list : []
         this.currentItem = null
@@ -64,7 +61,7 @@ class List extends Element {
             }
         }
         
-        if (this.rect.h < imui.font.cheight * this.list.length && !this.horizontal) {
+        if (this.Rect().h < imui.font.cheight * this.list.length && !this.horizontal) {
             let upRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y, w: imui.font.cwidth, h: imui.font.cheight}
             let downRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y + rect.h - imui.font.cheight, w: imui.font.cwidth, h: imui.font.cheight}
             let scrollBarRect = { x: rect.x + rect.w - imui.font.cwidth, y: rect.y + imui.font.cheight, w: imui.font.cwidth, h: rect.h - (imui.font.cheight * 2) }

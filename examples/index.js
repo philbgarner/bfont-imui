@@ -26,16 +26,17 @@ function Start() {
 
     imu = new imui.ImUI(canvas)
 
+    let listItems = []
+    for (let i = 0; i < 100; i++) {
+        listItems.push('Test ' + i)
+    }
+
     imu.onUpdate = (ui) => {
         ui.Element({ id: 'bg', type: 'FrameFlat', text: '', rect: { x: 0, y: 0, w: 720, h: 400 }, bgcolor: '#5a5a5aff', color: '#000000ff', highlight: '#f1f1f1ff'})
-        ui.Element({ id: 'edtTest', type: 'TextBoxFlat', defaultText: 'Textbox', rect: { x: 25, y: 32, w: 215, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
-        let test2 = ui.Element({ id: 'edtTest2', type: 'TextBoxFlat', defaultText: 'Textbox', rect: { x: 25, y: 48, w: 215, h: 16 }, color: '#ccccccff', highlight: '#f1f1f1ff', bgcolor: '#0000ddff' })
-        if (ui.Element({ id: 'btnTest', type: 'ButtonFlat', text: 'Reset', rect: { x: 245, y: 32, w: 96, h: 16 }, color: '#000000ff', highlight: '#f1f1f1ff', bgcolor: '#ccccccff' }).Clicked()) {
-            test2.text = 'Textbox'
-        }
-        ui.Element({ id: 'btnTest2', type: 'Button3d', text: 'Big Button', rect: { x: 25, y: 68, w: 215, h: 48 }, color: '#000000ff', highlight: '#f1f1f1ff', shadow: '#5a5a5aff', bgcolor: '#ccccccff' })
 
-        ui.Element({ id: 'layoutcolTest1', text: 'Test Animation', x: 200, y: 230, bgcolor: '#ccccccff', color: '#ffffffff', highlight: '#f1f1f1ff',
+        ui.Element({ id: 'listImage', type: 'ListImage', list: listItems, rect: { x: 25, y: 25, w: 400, h: 250 }, scrollbarWidth: 16 })
+
+        ui.Element({ id: 'layoutcolTest1', text: 'Test Animation', x: 200, y: 320, bgcolor: '#ccccccff', color: '#ffffffff', highlight: '#f1f1f1ff',
             anim: {
                 curve: 'bezier',
                 duration: 300,
