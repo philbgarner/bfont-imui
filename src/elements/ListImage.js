@@ -168,11 +168,17 @@ class ListImage extends Element {
             } else {
                 imui.DrawRect(scrollBarRect, '#c0c0c0ff')
             }
+
             imui.DrawRect(downRect, '#f1f1f1ff')
             imui.DrawRect(upRect, '#f1f1f1ff')
 
             let caretHovered = this.InsideRect(imui.mousePos.x, imui.mousePos.y, caretRect)
-            imui.DrawRect(caretRect, caretHovered ? '#f1f1c1ff' : '#e1e1e1ff')
+            if (this.caratImage.image) {
+                imui.ctx.drawImage(this.caratImage.hover && caretHovered ? this.state.mouseDown ? this.caratImage.pressed : this.caratImage.hover
+                    : this.caratImage.image, caretRect.x, caretRect.y)
+            } else {
+                imui.DrawRect(caretRect, caretHovered ? '#f1f1c1ff' : '#e1e1e1ff')
+            }
 
             // imui.DrawText(upRect.x, upRect.y, this.scrollbarCharacters.scrollUp, this.InsideRect(imui.mousePos.x, imui.mousePos.y, upRect) && this.state.mouseDown ? this.highlight : this.color, 
             //     this.InsideRect(imui.mousePos.x, imui.mousePos.y, upRect) && this.state.mouseDown ? { background: { colour: this.color } } : { background: { colour: this.bgScrollbar } })
@@ -203,7 +209,7 @@ class ListImage extends Element {
                     }
                 }
             } else if (this.draggingCaret && this.state.mouseDown) {
-                this.scrollOffset = parseInt(((imui.mousePos.y - scrollBarRect.y) / scrollBarRect.h) * (this.list.length - 2))
+                this.scrollOffset = parseInt(((imui.mousePos.y - scrollBarRect.y) / (scrollBarRect.h - upRect.h)) * (this.list.length - 1))
                 if (this.scrollOffset < 0) {
                     this.scrollOffset = 0
                 } else if (this.scrollOffset > this.list.length - 1) {
