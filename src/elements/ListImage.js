@@ -35,8 +35,7 @@ class ListImage extends Element {
         }
     }
 
-    drawImageSlice(imui, image, innerRect) {
-        let rect = { x: 0, y: 0, w: image.width, h: image.height }
+    drawImageSlice(imui, image, rect, innerRect) {
         if (image) {
             // Top Left Corner
             imui.ctx.drawImage(image, 0, 0, innerRect.x, innerRect.y, rect.x, rect.y, innerRect.x, innerRect.y)
@@ -165,8 +164,7 @@ class ListImage extends Element {
             let caretRect = { x: scrollBarRect.x, y: scrollBarRect.y + caretPos, w: scrollBarRect.w, h: this.scrollbarWidth }
 
             if (this.scrollAreaImage.image) {
-                console.log('this.scrollAreaImage', this.scrollAreaImage.image)
-                this.drawImageSlice(imui, this.scrollAreaImage.image, this.scrollAreaImage.innerRect)
+                this.drawImageSlice(imui, this.scrollAreaImage.image, { x: upRect.x, y: upRect.y, w: scrollBarRect.w, h: upRect.h + downRect.h + scrollBarRect.h }, this.scrollAreaImage.innerRect)
             } else {
                 imui.DrawRect(scrollBarRect, '#c0c0c0ff')
             }
