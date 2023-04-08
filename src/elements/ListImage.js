@@ -169,8 +169,21 @@ class ListImage extends Element {
                 imui.DrawRect(scrollBarRect, '#c0c0c0ff')
             }
 
-            imui.DrawRect(downRect, '#f1f1f1ff')
-            imui.DrawRect(upRect, '#f1f1f1ff')
+            let downHovered = this.InsideRect(imui.mousePos.x, imui.mousePos.y, downRect)
+            if (this.downImage.image) {
+                imui.ctx.drawImage(this.downImage.hover && downHovered ? this.state.mouseDown ? this.downImage.pressed : this.downImage.hover
+                    : this.downImage.image, downRect.x, downRect.y)
+            } else {
+                imui.DrawRect(downRect, '#f1f1f1ff')
+            }
+
+            let upHovered = this.InsideRect(imui.mousePos.x, imui.mousePos.y, upRect)
+            if (this.upImage.image) {
+                imui.ctx.drawImage(this.upImage.hover && upHovered ? this.state.mouseDown ? this.upImage.pressed : this.upImage.hover
+                    : this.upImage.image, upRect.x, upRect.y)
+            } else {
+                imui.DrawRect(upRect, '#f1f1f1ff')
+            }
 
             let caretHovered = this.InsideRect(imui.mousePos.x, imui.mousePos.y, caretRect)
             if (this.caratImage.image) {
