@@ -5,12 +5,15 @@ class ListImage extends Element {
         super(params)
         this.list = params.list ? params.list : []
         this.currentItem = null
+        this.selectedList = []
         this.scrollOffset = params.scrollOffset ? params.scrollOffset : 0
         this.topDown = params.topDown ? params.topDown : true
         this.horizontal = params.horizontal ? params.horizontal : false
         this.scrollbar = params.scrollbar ? params.scrollbar : true
+        this.multiSelect = params.multiSelect ? params.multiSelect : false
 
         this.scrollbarWidth = params.scrollbarWidth ? params.scrollbarWidth : 8
+        this.checkboxImage = params.checkboxImage ? params.checkboxImage : { image: null, hover: null, pressed: null, innerRect: null }
         this.caratImage = params.caratImage ? params.caratImage : { image: null, hover: null, pressed: null, innerRect: null }
         this.upImage = params.upImage ? params.upImage : { image: null, hover: null, pressed: null, innerRect: null }
         this.downImage = params.downImage ? params.downImage : { image: null, hover: null, pressed: null, innerRect: null }
@@ -137,11 +140,25 @@ class ListImage extends Element {
                 imui.mousePos.x < txtRect.x + txtRect.w && imui.mousePos.y < txtRect.y + txtRect.h
             let isMouseDownItem = this.state.mouseDown && imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&
                     imui.mousePos.x < txtRect.x + txtRect.w && imui.mousePos.y < txtRect.y + txtRect.h
-            if (isMouseDownItem) {
+            if (isMouseDownItem && this.currentItem !== l) {
+                if (this.multiSelect) {
+                    let selectedIndex = this.selectedList.findIndex(f => f === l)
+                    if (selectedIndex >= 0) {
+                        this.selectedList = this.selectedList.filter((f, index) => index !== selectedIndex)
+                    } else {
+                        this.selectedList.push(l)
+                    }
+                } else {
+                    this.selectedList = [l]
+                }
                 this.currentItem = l
             }
 
-            imui.DrawText(dx, dy, txt, isHoverItem ? textcolor : this.color, isHoverItem || this.currentItem === l ? { background: { colour: isMouseDownItem ? '#ccccccff' : this.bgScrollbar }} : undefined)
+            let indentAmt = this.multiSelect ? 9 : 0
+            if (this.multiSelect && this.checkboxImage.image) {
+                imui.ctx.drawImage(this.selectedList.includes(l) ? this.checkboxImage.pressed : this.checkboxImage.image, dx, dy)
+            }
+            imui.DrawText(indentAmt + dx, dy, txt, isHoverItem ? textcolor : this.color, isHoverItem || this.currentItem === l ? { background: { colour: isMouseDownItem ? '#ccccccff' : this.bgScrollbar }} : undefined)
             if (!this.horizontal) {
                 dy += imui.font.cheight
             } else {
