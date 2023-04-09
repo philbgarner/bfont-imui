@@ -11,6 +11,9 @@ class ListImage extends Element {
         this.horizontal = params.horizontal ? params.horizontal : false
         this.scrollbar = params.scrollbar ? params.scrollbar : true
         this.multiSelect = params.multiSelect ? params.multiSelect : false
+        
+        this.bgcolorSelected = params.bgcolorSelected ? params.bgcolorSelected : '#f1f1f1ff'
+        this.colorSelected = params.colorSelected ? params.colorSelected : '#090909ff'
 
         this.scrollbarWidth = params.scrollbarWidth ? params.scrollbarWidth : 8
         this.checkboxImage = params.checkboxImage ? params.checkboxImage : { image: null, hover: null, pressed: null, innerRect: null }
@@ -131,10 +134,11 @@ class ListImage extends Element {
 
         let dx = rect.x + imui.font.cwidth
         let dy = rect.y
+        let indentAmt = this.multiSelect ? 9 : 0
         for (let l = this.scrollOffset; l < this.list.length; l++) {
             let txt = this.list[l]
 
-            let txtRect = { x: dx, y: dy, w: txt.length * imui.font.cwidth, h: imui.font.cheight }
+            let txtRect = { x: dx, y: dy, w: this.GetMaxTextWidth(imui.font, txt) + 1 + indentAmt, h: imui.font.cheight }
             let isHoverItem = this.state.mouseOver &&
                 imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&
                 imui.mousePos.x < txtRect.x + txtRect.w && imui.mousePos.y < txtRect.y + txtRect.h
@@ -154,11 +158,12 @@ class ListImage extends Element {
                 this.currentItem = l
             }
 
-            let indentAmt = this.multiSelect ? 9 : 0
+            imui.DrawRect(txtRect, this.selectedList.includes(l) ? this.bgcolorSelected : bgcolor)
+            imui.DrawText(indentAmt + dx + 1, dy + 1, txt, isHoverItem ? textcolor : this.selectedList.includes(l) ? this.colorSelected : this.color) //, isHoverItem || this.currentItem === l ? { background: { colour: isMouseDownItem ? this.bgcolorSelected : bgcolor }} : undefined)
             if (this.multiSelect && this.checkboxImage.image) {
                 imui.ctx.drawImage(this.selectedList.includes(l) ? this.checkboxImage.pressed : this.checkboxImage.image, dx, dy)
             }
-            imui.DrawText(indentAmt + dx, dy, txt, isHoverItem ? textcolor : this.color, isHoverItem || this.currentItem === l ? { background: { colour: isMouseDownItem ? '#ccccccff' : this.bgScrollbar }} : undefined)
+
             if (!this.horizontal) {
                 dy += imui.font.cheight
             } else {
