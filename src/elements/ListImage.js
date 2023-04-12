@@ -135,6 +135,7 @@ class ListImage extends Element {
         let dx = rect.x + imui.font.cwidth
         let dy = rect.y
         let indentAmt = this.multiSelect ? 9 : 0
+        this.hoverItem = null
         for (let l = this.scrollOffset; l < this.list.length; l++) {
             let txt = this.list[l]
 
@@ -142,13 +143,17 @@ class ListImage extends Element {
             let isHoverItem = this.state.mouseOver &&
                 imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&
                 imui.mousePos.x < txtRect.x + txtRect.w && imui.mousePos.y < txtRect.y + txtRect.h
-            let isMouseDownItem = this.state.mouseDown && imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&
+            let isMouseOverItem = imui.mousePos.y >= txtRect.y && imui.mousePos.x >= txtRect.x &&
                     imui.mousePos.x < txtRect.x + txtRect.w && imui.mousePos.y < txtRect.y + txtRect.h
-            if (isMouseDownItem && this.currentItem !== l) {
+            if (isHoverItem) {
+                this.hoverItem = l
+            }        
+            if (this.state.mouseDown && isMouseOverItem && this.currentItem !== l) {
                 if (this.multiSelect) {
                     let selectedIndex = this.selectedList.findIndex(f => f === l)
                     if (selectedIndex >= 0) {
                         this.selectedList = this.selectedList.filter((f, index) => index !== selectedIndex)
+                        this.currentItem = null
                     } else {
                         this.selectedList.push(l)
                     }
@@ -156,8 +161,10 @@ class ListImage extends Element {
                     this.selectedList = [l]
                 }
                 this.currentItem = l
+            } else if (this.state.mouseUp && isMouseOverItem && this.currentItem === l) {
+                console.log(this.state.clicked, this.state, this.prevState.clicked, this.prevState)
             }
-
+            
             imui.DrawRect(txtRect, this.selectedList.includes(l) ? this.bgcolorSelected : bgcolor)
             imui.DrawText(indentAmt + dx + 1, dy + 1, txt, isHoverItem ? textcolor : this.selectedList.includes(l) ? this.colorSelected : this.color) //, isHoverItem || this.currentItem === l ? { background: { colour: isMouseDownItem ? this.bgcolorSelected : bgcolor }} : undefined)
             if (this.multiSelect && this.checkboxImage.image) {
